@@ -3,12 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace QuickVote.Models;
 
-public class Answer
+public class PollOption
 {
 
     [Key]
-    public string? AnswerID { get; set; }
-    public string? PollID { get; set; }
     public int OptionID { get; set; }
-    public string? VoterName { get; set; }
+    public string? PollID { get; set; }
+    public string? Description { get; set; }
 }

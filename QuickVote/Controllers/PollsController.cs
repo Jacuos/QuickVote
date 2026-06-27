@@ -1,157 +1,98 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using QuickVote.Data;
 using QuickVote.Models;
 
-namespace QuickVote.Controllers
+[Route("[controller]")]
+[ApiController]
+public class PollsController : ControllerBase
 {
-    public class PollsController : Controller
+    private readonly QuickVoteContext _context;
+    public PollsController(QuickVoteContext context)
     {
-        private readonly QuickVoteContext _context;
+        _context = context;
+    }
 
-        public PollsController(QuickVoteContext context)
+    // GET: api/Poll
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Poll>>> GetPoll()
+    {
+        return await _context.Polls.ToListAsync();
+    }
+
+    // GET: api/Poll/5
+    [HttpGet("{pollid}")]
+    public async Task<ActionResult<Poll>> GetPoll(string? pollid)
+    {
+        var poll = await _context.Polls.FindAsync(pollid);
+
+        if (poll == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        // GET: Polls
-        public async Task<IActionResult> Index()
+        return poll;
+    }
+
+    // PUT: api/Poll/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{pollid}")]
+    public async Task<IActionResult> PutPoll(string? pollid, Poll poll)
+    {
+        if (pollid != poll.PollID)
         {
-            return View(await _context.Poll.ToListAsync());
+            return BadRequest();
         }
 
-        // GET: Polls/Details/5
-        public async Task<IActionResult> Details(string id)
+        _context.Entry(poll).State = EntityState.Modified;
+
+        try
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var poll = await _context.Poll
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (poll == null)
-            {
-                return NotFound();
-            }
-
-            return View(poll);
-        }
-
-        // GET: Polls/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Polls/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Question,Options,EndDate,CollectedAnswersIDs")] Poll poll)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(poll);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(poll);
-        }
-
-        // GET: Polls/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var poll = await _context.Poll.FindAsync(id);
-            if (poll == null)
-            {
-                return NotFound();
-            }
-            return View(poll);
-        }
-
-        // POST: Polls/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ID,Question,Options,EndDate,CollectedAnswersIDs")] Poll poll)
-        {
-            if (id != poll.ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(poll);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PollExists(poll.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(poll);
-        }
-
-        // GET: Polls/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var poll = await _context.Poll
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (poll == null)
-            {
-                return NotFound();
-            }
-
-            return View(poll);
-        }
-
-        // POST: Polls/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var poll = await _context.Poll.FindAsync(id);
-            if (poll != null)
-            {
-                _context.Poll.Remove(poll);
-            }
-
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!PollExists(pollid))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
         }
 
-        private bool PollExists(string id)
+        return NoContent();
+    }
+
+    // POST: api/Poll
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public async Task<ActionResult<Poll>> PostPoll(Poll poll)
+    {
+        _context.Polls.Add(poll);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction("GetPoll", new { pollid = poll.PollID }, poll);
+    }
+
+    // DELETE: api/Poll/5
+    [HttpDelete("{pollid}")]
+    public async Task<IActionResult> DeletePoll(string? pollid)
+    {
+        var poll = await _context.Polls.FindAsync(pollid);
+        if (poll == null)
         {
-            return _context.Poll.Any(e => e.ID == id);
+            return NotFound();
         }
+
+        _context.Polls.Remove(poll);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private bool PollExists(string? pollid)
+    {
+        return _context.Polls.Any(e => e.PollID == pollid);
     }
 }

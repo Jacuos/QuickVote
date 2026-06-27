@@ -1,0 +1,6 @@
+@QuickVote_HostAddress = http://localhost:5105
+
+GET {{QuickVote_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
