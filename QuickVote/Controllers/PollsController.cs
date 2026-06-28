@@ -116,6 +116,8 @@ public class PollsController : ControllerBase
 
         var options = await _context.PollOption.Where(o => o.PollID == poll.PollID).ToArrayAsync();
         _context.PollOption.RemoveRange(options);
+        var answers = await _context.Answers.Where(a=>a.PollID == poll.PollID).ToArrayAsync();
+        _context.Answers.RemoveRange(answers);
         await _context.SaveChangesAsync();
 
         return NoContent();
