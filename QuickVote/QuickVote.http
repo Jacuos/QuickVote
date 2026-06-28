@@ -9,9 +9,10 @@ POST {{QuickVote_HostAddress}}/polls
 Content-Type: application/json
 
 {
-  "PollID":"1",
-  "Question":"Where are we going?",
-  "EndDate" : "2026-06-30T00:00:00",
+	"Poll":{
+			"Question":"Where are we going 2",
+			"EndDate" : "2026-06-30T00:00:00"
+	},
   "Options": [{  
 			"Description": "North"
 		},
@@ -34,7 +35,12 @@ Accept: application/json
 
 ###
 
-DELETE {{QuickVote_HostAddress}}/polls/5301ae58-5f49-4da4-bb60-62a3f20ae83a
+GET {{QuickVote_HostAddress}}/polls/265f7164-51ea-45fd-a2e0-8bdb8a27f994
+Accept: application/json
+
+###
+
+DELETE {{QuickVote_HostAddress}}/polls/66e5c73c-e186-4660-9edf-b1421de347b7
 Accept: application/json
 
 ###

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using QuickVote.Models;
+using System.Linq;
 
 [Route("[controller]")]
 [ApiController]
@@ -14,14 +16,22 @@ public class PollsController : ControllerBase
 
     // GET: api/Poll
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Poll>>> GetPoll()
+    public async Task<ActionResult<IEnumerable<PollDTO>>> GetPoll()
     {
-        return await _context.Polls.ToListAsync();
+        var polls = await _context.Polls.ToArrayAsync();
+        var pollsDTOs = new PollDTO[polls.Length];
+        for(int i=0;i<polls.Length;i++)
+        {
+            pollsDTOs[i] = new PollDTO { Poll = polls[i]};
+            PollOption[] currentOptions = await _context.PollOption.Where(o => o.PollID == polls[i].PollID).ToArrayAsync();
+            pollsDTOs[i].Options = currentOptions;
+        }
+        return pollsDTOs;
     }
 
     // GET: api/Poll/5
     [HttpGet("{pollid}")]
-    public async Task<ActionResult<Poll>> GetPoll(string? pollid)
+    public async Task<ActionResult<PollDTO>> GetPoll(string? pollid)
     {
         var poll = await _context.Polls.FindAsync(pollid);
 
@@ -30,7 +40,11 @@ public class PollsController : ControllerBase
             return NotFound();
         }
 
-        return poll;
+        var pollDTO = new PollDTO { Poll = poll};
+        PollOption[] currentOptions = await _context.PollOption.Where(o=>o.PollID==poll.PollID).ToArrayAsync();
+        pollDTO.Options = currentOptions;
+
+        return pollDTO;
     }
 
     // PUT: api/Poll/5
@@ -72,8 +86,8 @@ public class PollsController : ControllerBase
         var poll = new Poll
         {
             PollID = Guid.NewGuid().ToString(),
-            Question = pollDTO.Question,
-            EndDate = pollDTO.EndDate
+            Question = pollDTO.Poll.Question,
+            EndDate = pollDTO.Poll.EndDate
         };
         var options = pollDTO.Options?.Select(o => new PollOption
         {
@@ -85,6 +99,7 @@ public class PollsController : ControllerBase
             _context.PollOption.AddRange(options);
         await _context.SaveChangesAsync();
 
+        pollDTO.Poll.PollID = poll.PollID;
         return CreatedAtAction("GetPoll", new { pollid = poll.PollID }, pollDTO);
     }
 
@@ -97,8 +112,10 @@ public class PollsController : ControllerBase
         {
             return NotFound();
         }
-
         _context.Polls.Remove(poll);
+
+        var options = await _context.PollOption.Where(o => o.PollID == poll.PollID).ToArrayAsync();
+        _context.PollOption.RemoveRange(options);
         await _context.SaveChangesAsync();
 
         return NoContent();
