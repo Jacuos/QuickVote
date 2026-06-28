@@ -1,6 +1,40 @@
-@QuickVote_HostAddress = http://localhost:5105
+@QuickVote_HostAddress = https://localhost:7269
 
 GET {{QuickVote_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+POST {{QuickVote_HostAddress}}/polls
+Content-Type: application/json
+
+{
+  "PollID":"1",
+  "Question":"Where are we going?",
+  "EndDate" : "2026-06-30T00:00:00",
+  "Options": [{  
+			"Description": "North"
+		},
+  {  
+			"Description": "South"
+		},
+  {  
+			"Description": "East"
+		},
+  {  
+			"Description": "West"
+		}]  
+}
+
+###
+
+
+GET {{QuickVote_HostAddress}}/polls/
+Accept: application/json
+
+###
+
+DELETE {{QuickVote_HostAddress}}/polls/5301ae58-5f49-4da4-bb60-62a3f20ae83a
 Accept: application/json
 
 ###

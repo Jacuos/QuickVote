@@ -67,12 +67,25 @@ public class PollsController : ControllerBase
     // POST: api/Poll
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<Poll>> PostPoll(Poll poll)
+    public async Task<ActionResult<Poll>> PostPoll(PollDTO pollDTO)
     {
+        var poll = new Poll
+        {
+            PollID = Guid.NewGuid().ToString(),
+            Question = pollDTO.Question,
+            EndDate = pollDTO.EndDate
+        };
+        var options = pollDTO.Options?.Select(o => new PollOption
+        {
+            PollID = poll.PollID,
+            Description = o.Description
+        }).ToArray();
         _context.Polls.Add(poll);
+        if(options is not null)
+            _context.PollOption.AddRange(options);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetPoll", new { pollid = poll.PollID }, poll);
+        return CreatedAtAction("GetPoll", new { pollid = poll.PollID }, pollDTO);
     }
 
     // DELETE: api/Poll/5

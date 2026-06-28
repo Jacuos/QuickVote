@@ -7,7 +7,7 @@ public class Answer
 {
 
     [Key]
-    public string? AnswerID { get; set; }
+    public int? AnswerID { get; set; }
     public string? PollID { get; set; }
     public int OptionID { get; set; }
     public string? VoterName { get; set; }
