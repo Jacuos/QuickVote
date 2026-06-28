@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using QuickVote.Models;
 using System.Linq;
 
-[Route("[controller]")]
+[Route("/api/[controller]")]
 [ApiController]
 public class AnswersController : ControllerBase
 {
