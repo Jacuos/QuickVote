@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using QuickVote.Models;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 
@@ -11,6 +14,14 @@ builder.Services.AddOpenApi();
 var connectionString = builder.Configuration.GetConnectionString("QuickVoteContext") ?? throw new InvalidOperationException("Connection string 'QuickVoteContext' not found.");
 builder.Services.AddDbContext<QuickVoteContext>(opt =>
     opt.UseSqlite(connectionString));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:5173");
+                      });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,6 +31,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 

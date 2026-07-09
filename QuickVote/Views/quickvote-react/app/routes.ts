@@ -8,5 +8,5 @@ import {
 
 export default [
     index("routes/home.tsx"),
-    route("vote","routes/vote.tsx")
+    route("vote/:pollID","routes/vote.tsx")
 ] satisfies RouteConfig;

@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
-import { PollForm } from "../welcome/pollform";
+import { PollForm } from "./pollform";
 
 export function meta({}: Route.MetaArgs) {
   return [
