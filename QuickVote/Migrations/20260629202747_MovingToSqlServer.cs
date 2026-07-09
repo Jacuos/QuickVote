@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace QuickVote.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalCreate : Migration
+    public partial class MovingToSqlServer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,10 +15,11 @@ namespace QuickVote.Migrations
                 name: "Answers",
                 columns: table => new
                 {
-                    AnswerID = table.Column<string>(type: "TEXT", nullable: false),
-                    PollID = table.Column<string>(type: "TEXT", nullable: true),
-                    OptionID = table.Column<int>(type: "INTEGER", nullable: false),
-                    VoterName = table.Column<string>(type: "TEXT", nullable: true)
+                    AnswerID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PollID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OptionID = table.Column<int>(type: "int", nullable: false),
+                    VoterName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,10 +30,10 @@ namespace QuickVote.Migrations
                 name: "PollOption",
                 columns: table => new
                 {
-                    OptionID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    PollID = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true)
+                    OptionID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PollID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -43,9 +44,9 @@ namespace QuickVote.Migrations
                 name: "Polls",
                 columns: table => new
                 {
-                    PollID = table.Column<string>(type: "TEXT", nullable: false),
-                    Question = table.Column<string>(type: "TEXT", nullable: true),
-                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    PollID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-POST {{QuickVote_HostAddress}}/polls
+POST {{QuickVote_HostAddress}}/api/polls
 Content-Type: application/json
 
 {
@@ -30,22 +30,22 @@ Content-Type: application/json
 ###
 
 
-GET {{QuickVote_HostAddress}}/polls/
+GET {{QuickVote_HostAddress}}/api/polls/
 Accept: application/json
 
 ###
 
-GET {{QuickVote_HostAddress}}/polls/265f7164-51ea-45fd-a2e0-8bdb8a27f994
+GET {{QuickVote_HostAddress}}/api/polls/265f7164-51ea-45fd-a2e0-8bdb8a27f994
 Accept: application/json
 
 ###
 
-DELETE {{QuickVote_HostAddress}}/polls/66e5c73c-e186-4660-9edf-b1421de347b7
+DELETE {{QuickVote_HostAddress}}/api/polls/66e5c73c-e186-4660-9edf-b1421de347b7
 Accept: application/json
 
 ###
 
-POST {{QuickVote_HostAddress}}/answers
+POST {{QuickVote_HostAddress}}/api/answers
 Content-Type: application/json
 
 {
@@ -56,7 +56,7 @@ Content-Type: application/json
 
 ###
 
-GET {{QuickVote_HostAddress}}/answers/265f7164-51ea-45fd-a2e0-8bdb8a27f994
+GET {{QuickVote_HostAddress}}/api/answers/265f7164-51ea-45fd-a2e0-8bdb8a27f994
 Accept: application/json
 
 ###

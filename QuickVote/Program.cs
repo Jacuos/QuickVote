@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 var connectionString = builder.Configuration.GetConnectionString("QuickVoteContext") ?? throw new InvalidOperationException("Connection string 'QuickVoteContext' not found.");
 builder.Services.AddDbContext<QuickVoteContext>(opt =>
-    opt.UseSqlite(connectionString));
+    opt.UseSqlServer(connectionString));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
