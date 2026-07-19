@@ -3,7 +3,6 @@
 export function PollForm() {
     return (
         <>
-        <br></br>
             <div className="w-full space-y-6 px-4 justify-items-center text-center">
                 <nav className="rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4 ">
                     <p className="leading-6 text-gray-700 dark:text-gray-200">
