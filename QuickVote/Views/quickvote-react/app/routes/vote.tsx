@@ -25,25 +25,7 @@ export default function Vote({ params }: Route.ComponentProps) {
         );
     }
     if (!poll?.poll) {
-        return (
-            <>
-            <main className="justify-items-center pt-8 pb-4 min-h-200">
-               <Welcome />
-                <div>
-                 Oops! It seems that you typed wrong poll ID. Please use an existing poll ID or create a new poll.
-                </div>
-                <br/>
-                <div>
-                        <Link to="/">
-                            <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-                            >Go Home</button>
-                        </Link>
-                </div>
-                <br /><br /><br /><br />
-                <footer className="position-fixed bottom-0"><p>PollID: {params.pollID}</p></footer>
-            </main>
-            </>
-        );
+        return <VoteErrorHandle pollID={"dupa"} />;
     }
     else {
         return (
@@ -68,4 +50,26 @@ export default function Vote({ params }: Route.ComponentProps) {
             </>
         );
     }
+}
+
+export function VoteErrorHandle( pollID: string) {
+    return (
+        <>
+            <main className="justify-items-center pt-8 pb-4 min-h-200">
+                <Welcome />
+                <div>
+                    Oops! It seems that you typed wrong poll ID. Please use an existing poll ID or create a new poll.
+                </div>
+                <br />
+                <div>
+                    <Link to="/">
+                        <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+                        >Go Home</button>
+                    </Link>
+                </div>
+                <br /><br /><br /><br />
+                <footer className="position-fixed bottom-0"><p>PollID: {pollID}</p></footer>
+            </main>
+        </>
+    );
 }
