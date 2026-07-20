@@ -24,35 +24,13 @@ export default function Vote({ params }: Route.ComponentProps) {
             </div>
         );
     }
-    if (!poll?.poll) {
-        return <VoteErrorHandle pollID={"dupa"} />;
-    }
-    else {
-        return (
-            <>
-                <main className="justify-items-center pt-8 pb-4 min-h-200">
-                    <Welcome />
-                    <div>
-                        {poll!.poll.question}
-                        <table>
-                            <tbody>
-                                {poll!.options.map((option, index) => (
-                                    <tr className="item" key={option.optionID}>
-                                        <td>{index + 1}. {option.description}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <br /><br /><br /><br />
-                    <footer className="position-fixed bottom-0"><p>PollID: {params.pollID}</p></footer>
-                </main>
-            </>
-        );
-    }
+    if (!poll?.poll)
+        return <VoteErrorHandle pollID={params.pollID ?? ""} />;
+    else
+        return <VoteDisplay poll={poll} />;
 }
 
-export function VoteErrorHandle( pollID: string) {
+export function VoteErrorHandle( {pollID}: {pollID:string}) {
     return (
         <>
             <main className="justify-items-center pt-8 pb-4 min-h-200">
@@ -72,4 +50,28 @@ export function VoteErrorHandle( pollID: string) {
             </main>
         </>
     );
+}
+
+export function VoteDisplay({ poll }: { poll: PollDTOType }) {
+        return (
+            <>
+                <main className="justify-items-center pt-8 pb-4 min-h-200">
+                    <Welcome />
+                    <div>
+                        {poll!.poll.question}
+                        <table>
+                            <tbody>
+                                {poll!.options.map((option, index) => (
+                                    <tr className="item" key={option.optionID}>
+                                        <td>{index + 1}. {option.description}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <br /><br /><br /><br />
+                    <footer className="position-fixed bottom-0"><p>PollID: {poll.poll.pollID}</p></footer>
+                </main>
+            </>
+        );
 }
